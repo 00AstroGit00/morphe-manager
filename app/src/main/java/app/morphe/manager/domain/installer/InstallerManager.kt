@@ -150,12 +150,13 @@ class InstallerManager(
      * Whether an install started right after patching reaches the user on its own, either
      * silently or through a confirmation the installer knows how to put in front of them.
      *
-     * @param mount Whether the build is mounted rather than installed, which root does without
-     *   any installer, so asking for one leaves nothing to wait for.
+     * @param mount Whether the build is mounted rather than installed. Root mounts have no
+     *   installer to ask about, so only an explicit "install automatically" setting starts
+     *   them on their own.
      */
     suspend fun autoInstallAllowed(targetPackageName: String, mount: Boolean): Boolean {
         val afterPatching = prefs.afterPatching.get()
-        if (mount) return afterPatching != AfterPatching.MANUAL
+        if (mount) return afterPatching == AfterPatching.INSTALL
         if (afterPatching != AfterPatching.INSTALL) return false
 
         return when (val token = parseToken(prefs.installerPrimary.get())) {

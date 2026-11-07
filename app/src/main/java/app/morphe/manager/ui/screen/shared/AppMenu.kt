@@ -31,9 +31,10 @@ import app.morphe.manager.R
 import com.composables.icons.materialsymbols.MaterialSymbols
 import com.composables.icons.materialsymbols.rounded.*
 
-// Material's expressive menu: a large container, its entries inset by a small step and rounded
-// less by as much, so both corners share a center
-private val MenuItemInset = Defaults.SpaceExtraSmall
+// Material's expressive menu: a large container, its entries inset by a step and rounded
+// less by as much, so all corners share a center. The vertical step matches Material3's
+// DropdownMenu content padding so first/last items align with side spacing (#1391).
+private val MenuItemInset = 8.dp
 private val MenuShape = RoundedCornerShape(Defaults.CornerLarge)
 private val MenuItemShape = RoundedCornerShape(Defaults.CornerLarge - MenuItemInset)
 private val MenuShadowElevation = 6.dp

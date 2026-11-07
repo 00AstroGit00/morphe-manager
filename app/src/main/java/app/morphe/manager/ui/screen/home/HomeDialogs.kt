@@ -93,7 +93,12 @@ fun HomeDialogs(
                 homeViewModel = homeViewModel,
                 storagePickerLauncher = storagePickerLauncher,
                 apkDownloadHelpers = apkDownloadHelpers,
-                onTrustApkDownloadHelpers = { settingsNavigation.openSubpage(SettingsSubpage.APK_DOWNLOAD_HELPERS) }
+                onTrustApkDownloadHelpers = {
+                    // Leave the dialog first so its BackHandler cannot swallow back presses on the
+                    // settings subpage opened to trust the helper (#1392)
+                    flow.backFromApkSource()
+                    settingsNavigation.openSubpage(SettingsSubpage.APK_DOWNLOAD_HELPERS)
+                }
             )
         }
     }
@@ -285,6 +290,7 @@ private fun DialogHostScope.PatchFlowDialog(
                 packageName = session.packageName,
                 downloadUrl = session.downloadUrl,
                 requestedVersion = session.requestedVersion,
+                installedAppVersion = session.installedVersion,
                 usingMountInstall = flow.usingMountInstall,
                 stockAppInstalled = session.stockAppInstalled == true,
                 downloadColor = metadata?.downloadColor ?: KnownApps.DEFAULT_DOWNLOAD_COLOR,

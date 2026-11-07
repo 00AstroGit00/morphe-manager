@@ -355,6 +355,7 @@ fun BatchPatcherScreen(
                         packageName = search.item.packageName,
                         downloadUrl = search.url,
                         requestedVersion = search.version,
+                        installedAppVersion = search.installedVersion,
                         usingMountInstall = search.item.useMount,
                         stockAppInstalled = search.item.source is BatchApkSource.Installed,
                         downloadColor = metadata?.downloadColor ?: KnownApps.DEFAULT_DOWNLOAD_COLOR,
