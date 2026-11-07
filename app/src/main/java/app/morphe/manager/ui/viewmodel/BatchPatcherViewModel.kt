@@ -416,6 +416,7 @@ class BatchPatcherViewModel(
     data class ApkSearch(
         val item: BatchPatchItem,
         val version: String?,
+        val installedVersion: String? = null,
         val url: String,
         /**
          * Versions the sources cover, carried so a download helper can be told what else is
@@ -430,13 +431,14 @@ class BatchPatcherViewModel(
     /** [version] is what the user picked in the availability dialog, not just the recommended one. */
     fun beginApkSearch(item: BatchPatchItem, version: String?) {
         // Read before the choice is dropped, which is where the covered versions were resolved
-        val compatible = apkChoice?.takeIf { it.item.id == item.id }?.compatible.orEmpty()
+        val choice = apkChoice?.takeIf { it.item.id == item.id }
         apkChoice = null
         apkSearch = ApkSearch(
             item = item,
             version = version,
+            installedVersion = choice?.installedVersion,
             url = downloadUrlResolver.apiSearchUrl(item.packageName, version),
-            compatible = compatible
+            compatible = choice?.compatible.orEmpty()
         )
         viewModelScope.launch {
             val resolved = withContext(Dispatchers.IO) {
