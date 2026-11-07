@@ -88,13 +88,21 @@ class OriginalApkRepository(
     suspend fun get(packageName: String) = dao.get(packageName)
 
     /**
-     * Whether the saved original of [packageName] already stands for [file] of [version]. A split
-     * archive still replaces a merged APK, which a mount cannot restore the stock app from.
+     * Whether the saved original of [packageName] already stands for [file] of [version].
+     *
+     * A split archive is preferred over a merged/non-split APK when the incoming file is itself a
+     * split archive. A merged/non-split incoming APK can replace a saved split archive so bulky
+     * bundles are upgraded to a repatchable, device-optimized original (#1396); root mount restore
+     * uses the installed stock app, not this retained copy.
      */
     suspend fun hasOriginal(packageName: String, version: String, file: File): Boolean {
         val existing = get(packageName)?.takeIf { it.version == version } ?: return false
         val saved = File(existing.filePath).takeIf { it.exists() } ?: return false
-        return SplitApkPreparer.isSplitArchive(saved) || !SplitApkPreparer.isSplitArchive(file)
+        val savedIsSplit = SplitApkPreparer.isSplitArchive(saved)
+        val incomingIsSplit = SplitApkPreparer.isSplitArchive(file)
+        if (incomingIsSplit) return savedIsSplit
+        if (savedIsSplit) return false
+        return true
     }
 
     /**
