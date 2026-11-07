@@ -116,6 +116,9 @@ class PreferencesManager(
     /**  How often the background update check should run. */
     val updateCheckInterval = enumPreference("update_check_interval", UpdateCheckInterval.DAILY)
 
+    /** Whether patch bundle updates are checked when the app is opened. Manual refresh still works. */
+    val checkBundleUpdatesOnStartup = booleanPreference("check_bundle_updates_on_startup", true)
+
     /** Whether other apps may start a batch patch run through an intent. */
     val externalBatchPatchEnabled = booleanPreference("external_batch_patch_enabled", false)
 
@@ -356,6 +359,7 @@ class PreferencesManager(
         val seasonalThemes: Boolean? = null,
         val useExpertMode: Boolean? = null,
         val updateCheckInterval: UpdateCheckInterval? = null,
+        val checkBundleUpdatesOnStartup: Boolean? = null,
         val externalBatchPatchEnabled: Boolean? = null,
         val externalBatchPatchAllowlist: Set<String>? = null,
         val customBundles: List<BundleSnapshot>? = null,
@@ -429,6 +433,7 @@ class PreferencesManager(
                 seasonalThemes = seasonalThemes.takeIf { appearance },
                 useExpertMode = useExpertMode.takeIf { patching },
                 updateCheckInterval = updateCheckInterval.takeIf { updates },
+                checkBundleUpdatesOnStartup = checkBundleUpdatesOnStartup.takeIf { updates },
                 externalBatchPatchEnabled = externalBatchPatchEnabled.takeIf { patching },
                 externalBatchPatchAllowlist = externalBatchPatchAllowlist.takeIf { patching },
                 customBundles = customBundles.takeIf { sources },
@@ -490,6 +495,7 @@ class PreferencesManager(
         seasonalThemes = seasonalThemes.get(),
         useExpertMode = useExpertMode.get(),
         updateCheckInterval = updateCheckInterval.get(),
+        checkBundleUpdatesOnStartup = checkBundleUpdatesOnStartup.get(),
         externalBatchPatchEnabled = externalBatchPatchEnabled.get(),
         externalBatchPatchAllowlist = externalBatchPatchAllowlist.get(),
         filePickerSortMode = filePickerSortMode.get(),
@@ -569,6 +575,7 @@ class PreferencesManager(
         snapshot.seasonalThemes?.let { seasonalThemes.value = it }
         snapshot.useExpertMode?.let { useExpertMode.value = it }
         snapshot.updateCheckInterval?.let { updateCheckInterval.value = it }
+        snapshot.checkBundleUpdatesOnStartup?.let { checkBundleUpdatesOnStartup.value = it }
         snapshot.externalBatchPatchEnabled?.let { externalBatchPatchEnabled.value = it }
         snapshot.externalBatchPatchAllowlist?.let { externalBatchPatchAllowlist.value = it }
         snapshot.filePickerSortMode?.let { filePickerSortMode.value = it }

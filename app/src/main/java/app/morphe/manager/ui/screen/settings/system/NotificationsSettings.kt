@@ -48,6 +48,7 @@ fun NotificationsSettings(settingsViewModel: SettingsViewModel = koinViewModel()
     val prefs = settingsViewModel.prefs
 
     val backgroundUpdateNotifications by prefs.backgroundUpdateNotifications.getAsState()
+    val checkBundleUpdatesOnStartup by prefs.checkBundleUpdatesOnStartup.getAsState()
     val useManagerPrereleases by prefs.useManagerPrereleases.getAsState()
     val patchesPrereleaseIds by prefs.bundlePrereleasesEnabled.getAsState()
     val updateCheckInterval by prefs.updateCheckInterval.getAsState()
@@ -157,6 +158,14 @@ fun NotificationsSettings(settingsViewModel: SettingsViewModel = koinViewModel()
             icon = MaterialSymbols.Rounded.System_update
         ) {
             SettingsGroup {
+                SettingsSwitchItem(
+                    checked = checkBundleUpdatesOnStartup,
+                    onToggle = { settingsViewModel.setCheckBundleUpdatesOnStartup(!checkBundleUpdatesOnStartup) },
+                    icon = MaterialSymbols.Rounded.System_update,
+                    title = stringResource(R.string.settings_advanced_updates_check_startup),
+                    subtitle = stringResource(R.string.settings_advanced_updates_check_startup_description)
+                )
+
                 SettingsSwitchItem(
                     checked = backgroundUpdateNotifications,
                     onToggle = {

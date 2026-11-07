@@ -344,7 +344,9 @@ class ManagerApplication : Application() {
      */
     private fun onFirstScreenCreated() {
         scope.launch(Dispatchers.Default) {
-            patchBundleRepository.updateCheck()
+            if (prefs.checkBundleUpdatesOnStartup.get()) {
+                patchBundleRepository.updateCheck()
+            }
         }
 
         // Preload bundle avatar images into AvatarCache while the user hasn't opened the sheet yet.

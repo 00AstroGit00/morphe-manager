@@ -179,6 +179,10 @@ class SettingsViewModel(
         if (!hasGms) UpdateCheckWorker.schedule(appContext, interval)
     }
 
+    fun setCheckBundleUpdatesOnStartup(enabled: Boolean) = viewModelScope.launch {
+        prefs.checkBundleUpdatesOnStartup.update(enabled)
+    }
+
     /** Persists the allow-metered-updates preference. */
     fun toggleAllowMeteredUpdates(current: Boolean) = viewModelScope.launch {
         prefs.allowMeteredUpdates.update(!current)
